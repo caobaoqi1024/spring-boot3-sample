@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dev.cbq.demo02.user.mapper.PermissionMapper">
+	<resultMap id="BaseResultMap" type="dev.cbq.demo02.entity.Permission">
+    <!--@Table backend.permission-->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+  </resultMap>
+
+	<select id="loadPermissionsByRoleId" resultType="java.util.List">
+        SELECT permission_id AS id, code AS code
+        FROM backend.tb_permission
+                 LEFT JOIN backend.role_permission_map rpm on backend.tb_permission.id = rpm.permission_id
+        WHERE role_id = #{roleId}
+    </select>
+
+</mapper>
