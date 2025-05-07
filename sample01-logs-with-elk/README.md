@@ -1,0 +1,6 @@
+- https://spring.io/blog/2024/08/23/structured-logging-in-spring-boot-3-4
+- https://docs.spring.io/spring-boot/reference/features/logging.html#features.logging.structured.logstash
+- https://blog.csdn.net/tian830937/article/details/140112278
+- https://medium.com/@nithidol/spring-boot-3-logback-and-logstash-integrated-with-elasticsearch-and-kibana-a184c46e5b8e
+- https://www.cnblogs.com/sueyyyy/p/13721976.html
+- https://github.com/spring-projects/spring-boot/blob/main/spring-boot-project/spring-boot/src/main/resources/org/springframework/boot/logging/logback/defaults.xml

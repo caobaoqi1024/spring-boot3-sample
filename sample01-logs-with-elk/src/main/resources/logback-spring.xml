@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- 自定义转换规则 -->
+    <conversionRule conversionWord="applicationName"
+                    class="org.springframework.boot.logging.logback.ApplicationNameConverter"/>
+    <conversionRule conversionWord="clr" class="org.springframework.boot.logging.logback.ColorConverter"/>
+    <conversionRule conversionWord="correlationId"
+                    class="org.springframework.boot.logging.logback.CorrelationIdConverter"/>
+    <conversionRule conversionWord="esb"
+                    class="org.springframework.boot.logging.logback.EnclosedInSquareBracketsConverter"/>
+    <conversionRule conversionWord="wex"
+                    class="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter"/>
+    <conversionRule conversionWord="wEx"
+                    class="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter"/>
+
+    <!-- 日志模式配置 -->
+    <property name="CONSOLE_LOG_PATTERN"
+              value="${CONSOLE_LOG_PATTERN:-%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(%5p) %clr(${PID:-}){magenta} %clr(--- [%15.15t]){faint} %clr(%-40.40logger{39}){cyan} : %m%n%wEx}"/>
+    <property name="FILE_LOG_PATTERN"
+              value="${FILE_LOG_PATTERN:-%d{yyyy-MM-dd HH:mm:ss.SSS} %5p ${PID:-} --- [%t] %-40.40logger{39} : %m%n%wEx}"/>
+
+    <!-- 编码格式 -->
+    <property name="CONSOLE_LOG_CHARSET" value="UTF-8"/>
+    <property name="FILE_LOG_CHARSET" value="UTF-8"/>
+
+    <!-- 日志级别 -->
+    <property name="CONSOLE_LOG_THRESHOLD" value="INFO"/>
+    <property name="FILE_LOG_THRESHOLD" value="DEBUG"/>
+
+    <!-- 控制台输出 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <charset>${CONSOLE_LOG_CHARSET}</charset>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern> <!-- ✅填补缺失pattern -->
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>${CONSOLE_LOG_THRESHOLD}</level>
+        </filter>
+    </appender>
+
+    <!-- 文件输出（建议增加） -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/app.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/app.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <charset>${FILE_LOG_CHARSET}</charset>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>${FILE_LOG_THRESHOLD}</level>
+        </filter>
+    </appender>
+
+    <!-- Logstash 输出 -->
+    <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <destination>localhost:5000</destination>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+        <!-- 可增加重试策略 -->
+        <keepAliveDuration>5 minutes</keepAliveDuration>
+        <reconnectionDelay>10000</reconnectionDelay> <!-- 重连间隔10秒 -->
+    </appender>
+
+    <!-- 根日志配置 -->
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+        <!--        <appender-ref ref="FILE"/>-->
+        <appender-ref ref="LOGSTASH"/>
+    </root>
+
+</configuration>

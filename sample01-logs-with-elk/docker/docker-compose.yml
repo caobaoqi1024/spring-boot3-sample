@@ -1,0 +1,55 @@
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:9.0.0
+    restart: "no"
+    ports:
+      - "9200:9200"
+    volumes:
+      - elk-data:/usr/share/elasticsearch/data
+      - elk-log:/usr/share/elasticsearch/logs
+    environment:
+      xpack.security.enabled: "false"
+      bootstrap.memory_lock: "true"
+      discovery.type: "single-node"
+      ELASTIC_PASSWORD: root
+    healthcheck:
+      test: curl -u --fail -s http://localhost:9200 || exit 1
+      interval: 10s
+      timeout: 5s
+      start_period: 10s
+      retries: 5
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    networks:
+      - dev
+  kibana:
+    image: docker.elastic.co/kibana/kibana:9.0.0
+    restart: "no"
+    ports:
+      - "5601:5601"
+    environment:
+      SERVER_NAME: kibana
+      ELASTICSEARCH_HOSTS: '["http://elasticsearch:9200"]'
+    networks:
+      - dev
+  logstash:
+    image: docker.elastic.co/logstash/logstash:9.0.0
+    container_name: logstash
+    volumes:
+      - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+    depends_on:
+      - elasticsearch
+    ports:
+      - "5000:5000"
+      - "9600:9600"
+    networks:
+      - dev
+volumes:
+  elk-data:
+  elk-log:
+networks:
+  dev:
+
+
