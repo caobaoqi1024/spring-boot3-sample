@@ -15,6 +15,7 @@
     <module>demo01-quickstart</module>
     <module>demo02-mybatis-plus</module>
     <module>demo03-data-cache</module>
+    <module>demo04-data-mongoDB</module>
   </modules>
 
   <groupId>dev.cbq</groupId>
