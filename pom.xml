@@ -16,6 +16,7 @@
     <module>demo02-mybatis-plus</module>
     <module>demo03-data-cache</module>
     <module>demo04-data-mongoDB</module>
+    <module>demo05-ai</module>
   </modules>
 
   <groupId>dev.cbq</groupId>
